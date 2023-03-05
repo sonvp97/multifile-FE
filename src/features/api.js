@@ -1,9 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
-import { v4 as uuidv4 } from 'uuid';
 
 const config = {
   headers: {
-    Authorization: `eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY3NzgwNjY5MCwiZXhwIjoxNjc4NDExNDkwfQ._iK-PbMftKFjwwTDKbukESmvoLZjCjuY8IGcDBLM6upsN-e2kcO4rTdwS4OKgHCzrJ9ttGV_vvLUEP3aw4VY_A`
+    Authorization: `eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY3Nzk4MDU1MywiZXhwIjoxNjc4NTg1MzUzfQ.Byi4hQCorW3PeUJS6E2XQT-7Kg-NGznZbwceYQr_9EaSr9QgTcYX2rTM5RMjGc033WhsVXGQiUTFisQSC4tsAg`
   }
 };
 export const api = createApi({
@@ -48,8 +47,8 @@ export const api = createApi({
       invalidatesTags: ["Customer"],
     }),
     deleteCustomer: build.mutation({
-      query: ({ orderId }) => ({
-        url: `/customers/${orderId}`,
+      query: (id ) => ({
+        url: `/customers/${id}`,
         method: "DELETE",
         headers: config.headers,
       }),
@@ -59,5 +58,7 @@ export const api = createApi({
 });
 export const { useGetCustomerQuery,
 useUpdateCustomerMutation,
-useCreateFileMutation } = api;
+useCreateFileMutation,
+useDeleteCustomerMutation,
+useCreateCustomerMutation} = api;
 

@@ -7,6 +7,8 @@ import Dashboard from "scenes/dashboard";
 import { themeSettings } from "theme";
 import { useSelector } from "react-redux";
 import Customers from "scenes/customers";
+import AddCustomer from "scenes/addCustomer";
+
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -20,6 +22,7 @@ function App() {
             <Route element={<Layout />}>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/Customers list" element={<Customers />} />
+              <Route path="/Add Customer" element={<AddCustomer />} />
               <Route path="/dashboard" element={<Dashboard />} />
             </Route>
           </Routes>

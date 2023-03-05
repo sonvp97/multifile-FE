@@ -1,8 +1,8 @@
 import { Box, useTheme } from "@mui/material";
 import Header from "components/Header";
 import { DataGrid } from "@mui/x-data-grid";
-import React, {useState} from "react";
-import { useGetCustomerQuery,useUpdateCustomerMutation,useCreateFileMutation } from "../../features/api";
+import React, { useState } from "react";
+import { useGetCustomerQuery, useUpdateCustomerMutation, useCreateFileMutation, useDeleteCustomerMutation } from "../../features/api";
 // import DeleteIcon from "@mui/icons-material/Delete";
 // import EditIcon from "@mui/icons-material/Edit";
 import { IconButton } from "@mui/material";
@@ -13,10 +13,13 @@ const Customers = () => {
   const theme = useTheme();
   const { data, isLoading } = useGetCustomerQuery();
   const [updateCustomer] = useUpdateCustomerMutation();
+  const [deleteCustomer] = useDeleteCustomerMutation();
 
   const [open, setOpen] = useState(false);
   const handleDeleteRow = (row) => {
-    // Implement your logic to delete the row here
+    if (window.confirm("Are you sure you want to delete this customer?")) {
+      deleteCustomer(row.id);
+    }
   };
 
   const style = {
@@ -55,6 +58,23 @@ const Customers = () => {
       flex: 0.5,
     },
     {
+      field: "image",
+      headerName: "Image",
+      flex: 0.5,
+      renderCell: (params) => (
+        <img
+          src={`../../image/${params.row.image}`}
+          alt="Product"
+          style={{
+            width: 40,
+            height: 40,
+            objectFit: "contain",
+            borderRadius: "50%",
+          }}
+        />
+      )
+    },
+    {
       field: "lastName",
       headerName: "Name",
       flex: 0.8,
@@ -90,7 +110,7 @@ const Customers = () => {
         };
         return (
           <>
-            <IconButton onClick={handleEditClick} sx={{ml:"2rem"}}>
+            <IconButton onClick={handleEditClick} sx={{ ml: "2rem" }}>
               <Edit />
             </IconButton>
             <IconButton onClick={handleDeleteClick}>
@@ -139,104 +159,103 @@ const Customers = () => {
           rows={data || []}
           columns={columns}
           checkboxSelection
-          // onSelectionModelChange={(ids) => setSelectedRowIds(ids)}
         />
         <Modal
-        open={open}
-        onClose={handleCloseEdit}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Edit Customer
-        </Typography>
-        <TextField
-          label="First Name"
-          fullWidth
-          margin="normal"
-          variant="outlined"
-          value={editingValue?.firstName || ""}
-          onChange={(event) => {
-            setEditingValue({
-              ...editingValue,
-              firstName: event.target.value,
-            });
-          }}
-        />
-        <TextField
-          label="Last Name"
-          fullWidth
-          margin="normal"
-          variant="outlined"
-          value={editingValue?.lastName || ""}
-          onChange={(event) => {
-            setEditingValue({
-              ...editingValue,
-              lastName: event.target.value,
-            });
-          }}
-        />
-        <TextField
-          label="Email"
-          fullWidth
-          margin="normal"
-          variant="outlined"
-          value={editingValue?.email || ""}
-          onChange={(event) => {
-            setEditingValue({
-              ...editingValue,
-              email: event.target.value,
-            });
-          }}
-        />
-        <TextField
-          label="Phone"
-          fullWidth
-          margin="normal"
-          variant="outlined"
-          value={editingValue?.phone || ""}
-          onChange={(event) => {
-            setEditingValue({
-              ...editingValue,
-              phone: event.target.value,
-            });
-          }}
-        />
-        <TextField
-          label="Address"
-          fullWidth
-          margin="normal"
-          variant="outlined"
-          value={editingValue?.address || ""}
-          onChange={(event) => {
-            setEditingValue({
-              ...editingValue,
-              address: event.target.value,
-            });
-          }}
-        />
-        <TextField
-  type="file"
-  onChange={(event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append('file', selectedFile,selectedFile.name);
-      setFile(formData);
-      setEditingValue({
-        ...editingValue,
-        image: selectedFile.name,
-      });
-      
-    }
-  }}
-/>
-        <Button variant="contained" sx={{ mt: 2 }} onClick={handleSubmit}>
-          Save
-        </Button>
-      </Box>
-      </Modal>
+          open={open}
+          onClose={handleCloseEdit}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Edit Customer
+            </Typography>
+            <TextField
+              label="First Name"
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              value={editingValue?.firstName || ""}
+              onChange={(event) => {
+                setEditingValue({
+                  ...editingValue,
+                  firstName: event.target.value,
+                });
+              }}
+            />
+            <TextField
+              label="Last Name"
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              value={editingValue?.lastName || ""}
+              onChange={(event) => {
+                setEditingValue({
+                  ...editingValue,
+                  lastName: event.target.value,
+                });
+              }}
+            />
+            <TextField
+              label="Email"
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              value={editingValue?.email || ""}
+              onChange={(event) => {
+                setEditingValue({
+                  ...editingValue,
+                  email: event.target.value,
+                });
+              }}
+            />
+            <TextField
+              label="Phone"
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              value={editingValue?.phone || ""}
+              onChange={(event) => {
+                setEditingValue({
+                  ...editingValue,
+                  phone: event.target.value,
+                });
+              }}
+            />
+            <TextField
+              label="Address"
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              value={editingValue?.address || ""}
+              onChange={(event) => {
+                setEditingValue({
+                  ...editingValue,
+                  address: event.target.value,
+                });
+              }}
+            />
+            <TextField
+              type="file"
+              onChange={(event) => {
+                const selectedFile = event.target.files[0];
+                if (selectedFile) {
+                  const formData = new FormData();
+                  formData.append('file', selectedFile, selectedFile.name);
+                  setFile(formData);
+                  setEditingValue({
+                    ...editingValue,
+                    image: selectedFile.name,
+                  });
+
+                }
+              }}
+            />
+            <Button variant="contained" sx={{ mt: 2 }} onClick={handleSubmit}>
+              Save
+            </Button>
+          </Box>
+        </Modal>
       </Box>
     </Box>
   );
